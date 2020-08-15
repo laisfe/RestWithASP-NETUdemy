@@ -1,0 +1,98 @@
+﻿using RestWithASPNETUdemy.Model;
+using RestWithASPNETUdemy.Model.Context;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace RestWithASPNETUdemy.Services.Implementations
+{
+    public class PersonServiceImplementation : IPersonService
+    {
+        private MySQLContext _context;
+
+        public PersonServiceImplementation(MySQLContext context)
+        {
+            _context = context;
+        }
+
+        // Contador responsável por gerar um fake ID já que não estamos
+        // acessando nenhum banco de dados
+        private volatile int count;
+
+        // Metodo responsável por criar uma nova pessoa
+        // Se tivéssemos um banco de dados esse seria o
+        // momento de persistir os dados
+        public Person Create(Person person)
+        {
+            try
+            {
+                _context.Add(person);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return person;
+        }
+
+        // Método responsável por retornar uma pessoa
+        // como não acessamos nenhuma base de dados
+        // estamos retornando um mock
+        public Person FindById(long id)
+        {
+            return new Person
+            {
+                Id = IncrementAndGet(),
+                FirstName = "Lais",
+                LastName = "Fernandes",
+                Address = "São Bernardo do Campo - São Paulo - Brasil",
+                Gender = "Female",
+            };
+        }
+
+        // Método responsável por retornar todas as pessoas
+        // mais uma vez essas informações são mocks
+        public List<Person> FindAll()
+        {
+            List<Person> persons = new List<Person>();
+            for (int i = 0; i < 8; i++)
+            {
+                Person person = MockPerson(i);
+                persons.Add(person);
+            }
+            return persons;
+        }
+
+        // Método responsável por atualizar uma pessoa
+        // por ser mock retornamos a mesma informação passada
+        public Person Update(Person person)
+        {
+            return person;
+        }
+
+        // Método responsável por deletar
+        // uma pessoa a partir de um ID
+        public void Delete(long id)
+        {
+        }
+
+        private Person MockPerson(int i)
+        {
+            return new Person
+            {
+                Id = IncrementAndGet(),
+                FirstName = "Person First Name " + i,
+                LastName = "Person Last Name " + i,
+                Address = "Some Address " + i,
+                Gender = "Gender " + i,
+            };
+        }
+
+        private long IncrementAndGet()
+        {
+            return Interlocked.Increment(ref count);
+        }
+    }
+}
