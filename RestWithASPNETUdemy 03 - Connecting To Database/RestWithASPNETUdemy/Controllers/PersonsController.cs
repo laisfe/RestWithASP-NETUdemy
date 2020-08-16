@@ -15,7 +15,7 @@ namespace RestWithASPNETUdemy.Controllers
     {
 
         //Declaração do serviço usado
-        private IPersonService _personService;
+        private readonly IPersonService _personService;
 
         /* Injeção de uma instancia de IPersonService ao criar
         uma instancia de PersonController */

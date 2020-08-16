@@ -2,26 +2,24 @@
 using RestWithASPNETUdemy.Model.Context;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace RestWithASPNETUdemy.Services.Implementations
 {
     public class PersonServiceImplementation : IPersonService
     {
-        private MySQLContext _context;
+        private readonly MySQLContext _context;
 
         public PersonServiceImplementation(MySQLContext context)
         {
             _context = context;
         }
 
-        // Contador responsável por gerar um fake ID já que não estamos
-        // acessando nenhum banco de dados
-        private volatile int count;
-
         // Metodo responsável por criar uma nova pessoa
-        // Se tivéssemos um banco de dados esse seria o
-        // momento de persistir os dados
+        // nesse momento adicionamos o objeto ao contexto
+        // e finalmente salvamos as mudanças no contexto
+        // na base de dados
         public Person Create(Person person)
         {
             try
@@ -38,37 +36,38 @@ namespace RestWithASPNETUdemy.Services.Implementations
         }
 
         // Método responsável por retornar uma pessoa
-        // como não acessamos nenhuma base de dados
-        // estamos retornando um mock
         public Person FindById(long id)
         {
-            return new Person
-            {
-                Id = IncrementAndGet(),
-                FirstName = "Lais",
-                LastName = "Fernandes",
-                Address = "São Bernardo do Campo - São Paulo - Brasil",
-                Gender = "Female",
-            };
+            return _context.Persons.SingleOrDefault(p => p.Id.Equals(id));
         }
 
         // Método responsável por retornar todas as pessoas
-        // mais uma vez essas informações são mocks
         public List<Person> FindAll()
         {
-            List<Person> persons = new List<Person>();
-            for (int i = 0; i < 8; i++)
-            {
-                Person person = MockPerson(i);
-                persons.Add(person);
-            }
-            return persons;
+            return _context.Persons.ToList();
         }
 
         // Método responsável por atualizar uma pessoa
-        // por ser mock retornamos a mesma informação passada
         public Person Update(Person person)
         {
+            // Verificamos se a pessoa existe na base
+            // Se não existir retornamos uma instancia vazia de pessoa
+            if (!Exists(person.Id)) return new Person();
+
+            // Pega o estado atual do registro no banco
+            // seta as alterações e salva
+            var result = _context.Persons.SingleOrDefault(p => p.Id.Equals(person.Id));
+
+            try
+            {
+                _context.Entry(result).CurrentValues.SetValues(person);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
             return person;
         }
 
@@ -76,23 +75,23 @@ namespace RestWithASPNETUdemy.Services.Implementations
         // uma pessoa a partir de um ID
         public void Delete(long id)
         {
-        }
+            var result = _context.Persons.SingleOrDefault(p => p.Id.Equals(id));
 
-        private Person MockPerson(int i)
-        {
-            return new Person
+            try
             {
-                Id = IncrementAndGet(),
-                FirstName = "Person First Name " + i,
-                LastName = "Person Last Name " + i,
-                Address = "Some Address " + i,
-                Gender = "Gender " + i,
-            };
+                if (result != null) _context.Persons.Remove(result);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        private long IncrementAndGet()
+        private bool Exists(long? id)
         {
-            return Interlocked.Increment(ref count);
+            return _context.Persons.Any(p => p.Id.Equals(id));
         }
+
     }
 }
