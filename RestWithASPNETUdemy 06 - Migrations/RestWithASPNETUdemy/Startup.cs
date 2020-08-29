@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +12,6 @@ using RestWithASPNETUdemy.Repository;
 using RestWithASPNETUdemy.Repository.Implementations;
 using RestWithASPNETUdemy.Service;
 using RestWithASPNETUdemy.Service.Implementations;
-using System;
-using System.Collections.Generic;
 
 namespace RestWithASPNETUdemy
 {
@@ -39,6 +39,7 @@ namespace RestWithASPNETUdemy
                 try
                 {
                     var evolveConnection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+
                     var evolve = new Evolve.Evolve("evolve.json", evolveConnection, msg => _logger.LogInformation(msg))
                     {
                         Locations = new List<string> { "db/migrations" },
@@ -49,7 +50,8 @@ namespace RestWithASPNETUdemy
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical("Database migration failed", ex);
+                    _logger.LogCritical("Database migration failed.", ex);
+                    throw;
                 }
             }
 
@@ -63,18 +65,11 @@ namespace RestWithASPNETUdemy
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
