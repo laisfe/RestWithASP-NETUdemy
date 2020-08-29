@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS books (
-  id varchar(127) NOT NULL,
+  id INT(10) AUTO_INCREMENT NOT NULL,
   Author longtext,
   LaunchDate datetime(6) NOT NULL,
   Price decimal(65,2) NOT NULL,
