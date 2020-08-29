@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Repository;
 using RestWithASPNETUdemy.Repository.Generic;
-using RestWithASPNETUdemy.Repository.Implementations;
 using RestWithASPNETUdemy.Service;
 using RestWithASPNETUdemy.Service.Implementations;
 
@@ -62,7 +61,6 @@ namespace RestWithASPNETUdemy
 
             //Dependency Injection
             services.AddScoped<IPersonService, PersonServiceImpl>();
-            services.AddScoped<IPersonRepository, PersonRepositoryImpl>();
             services.AddScoped<IBookService, BookServiceImpl>();
 
             //Dependency Injection of GenericRepository

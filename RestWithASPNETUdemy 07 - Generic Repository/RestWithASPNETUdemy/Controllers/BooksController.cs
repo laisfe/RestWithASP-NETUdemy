@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestWithASPNETUdemy.Model;
+using RestWithASPNETUdemy.Service;
 
 namespace RestWithASPNETUdemy.Controllers
 {
@@ -14,15 +15,15 @@ namespace RestWithASPNETUdemy.Controllers
     {
         
         //Declaração do serviço usado
-        //private readonly IBookService _bookService;
+        private readonly IBookService _bookService;
 
         /* Injeção de uma instancia de IPersonBusiness ao criar
         uma instancia de PersonController */
-       /* public BooksController(IBookService bookService)
+       public BooksController(IBookService bookService)
         {
             _bookService = bookService;
         }
-        */
+        
 
         //Mapeia as requisições GET para http://localhost:{porta}/api/person/
         //Get sem parâmetros para o FindAll --> Busca Todos
@@ -30,8 +31,7 @@ namespace RestWithASPNETUdemy.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            //return Ok(_bookService.FindAll());
-            return Ok();
+            return Ok(_bookService.FindAll());
         }
 
         //Mapeia as requisições GET para http://localhost:{porta}/api/person/{id}
@@ -41,10 +41,9 @@ namespace RestWithASPNETUdemy.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
-            /*var book = _bookService.FindById(id);
+            var book = _bookService.FindById(id);
             if (book == null) return NotFound();
-            return Ok(book);*/
-            return Ok();
+            return Ok(book);
         }
 
         //Mapeia as requisições POST para http://localhost:{porta}/api/person/
@@ -53,9 +52,8 @@ namespace RestWithASPNETUdemy.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Book book)
         {
-            /*if (book == null) return BadRequest();
-            return new ObjectResult(_bookService.Create((book)));*/
-            return Ok();
+            if (book == null) return BadRequest();
+            return new ObjectResult(_bookService.Create((book)));
         }
 
         //Mapeia as requisições PUT para http://localhost:{porta}/api/person/
@@ -64,11 +62,10 @@ namespace RestWithASPNETUdemy.Controllers
         [HttpPut]
         public IActionResult Put([FromBody]Book book)
         {
-            /*if (person == null) return BadRequest();
-            var updatedPerson = _personService.Update(person);
+            if (book == null) return BadRequest();
+            var updatedPerson = _bookService.Update(book);
             if (updatedPerson == null) return BadRequest();
-            return new ObjectResult(updatedPerson);*/
-            return Ok();
+            return new ObjectResult(updatedPerson);
         }
 
         //Mapeia as requisições DELETE para http://localhost:{porta}/api/person/{id}
@@ -77,9 +74,8 @@ namespace RestWithASPNETUdemy.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            /*_bookService.Delete(id);
-            return NoContent();*/
-            return Ok();
+            _bookService.Delete(id);
+            return NoContent();
         }
     }
 }
