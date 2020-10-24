@@ -1,8 +1,8 @@
 ﻿using RestWithASPNETUdemy.Model;
 
-namespace RestWithASPNETUdemy.Repository
+namespace RestWithASPNETUdemy.Service
 {
-    public interface ILoginRepository
+    public interface IUserRepository
     {
         User FindByLogin(string login);
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestWithASPNETUdemy.Data.VO;
 using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Service;
@@ -36,6 +37,7 @@ namespace RestWithASPNETUdemy.Controllers
         [SwaggerResponse(204)]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
+        [Authorize("Bearer")]
         public IActionResult Get()
         {
             return Ok(_bookService.FindAll());
@@ -50,6 +52,7 @@ namespace RestWithASPNETUdemy.Controllers
         [SwaggerResponse(204)]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
+        [Authorize("Bearer")]
         public IActionResult Get(long id)
         {
             var book = _bookService.FindById(id);
@@ -64,6 +67,7 @@ namespace RestWithASPNETUdemy.Controllers
         [SwaggerResponse(201, Type = typeof(BookVO))]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
+        [Authorize("Bearer")]
         public IActionResult Post([FromBody]Book book)
         {
             if (book == null) return BadRequest();
@@ -77,6 +81,7 @@ namespace RestWithASPNETUdemy.Controllers
         [SwaggerResponse(202, Type = typeof(BookVO))]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
+        [Authorize("Bearer")]
         public IActionResult Put([FromBody]Book book)
         {
             if (book == null) return BadRequest();
@@ -92,6 +97,7 @@ namespace RestWithASPNETUdemy.Controllers
         [SwaggerResponse(204)]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
+        [Authorize("Bearer")]
         public IActionResult Delete(int id)
         {
             _bookService.Delete(id);

@@ -2,14 +2,14 @@
 using RestWithASPNETUdemy.Model.Context;
 using System.Linq;
 
-namespace RestWithASPNETUdemy.Repository.Implementations
+namespace RestWithASPNETUdemy.Service.Implementations
 {
-    public class LoginRepositoryImpl : ILoginRepository
+    public class UserRepositoryImpl : IUserRepository
     {
 
         private readonly MySQLContext _context;
 
-        public LoginRepositoryImpl(MySQLContext context)
+        public UserRepositoryImpl(MySQLContext context)
         {
             _context = context;
         }
