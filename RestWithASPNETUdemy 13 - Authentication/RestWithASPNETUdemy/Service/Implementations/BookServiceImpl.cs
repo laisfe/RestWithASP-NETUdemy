@@ -1,4 +1,6 @@
-﻿using RestWithASPNETUdemy.Model;
+﻿using RestWithASPNETUdemy.Data.Converters;
+using RestWithASPNETUdemy.Data.VO;
+using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Repository.Generic;
 using System.Collections.Generic;
 
@@ -7,37 +9,43 @@ namespace RestWithASPNETUdemy.Service.Implementations
     public class BookServiceImpl : IBookService
     {
         private readonly IRepository<Book> _repository;
+        private readonly BookConverter _converter;
 
         public BookServiceImpl(IRepository<Book> repository)
         {
             _repository = repository;
+            _converter = new BookConverter();
         }
 
         // Metodo responsável por criar uma nova pessoa
         // nesse momento adicionamos o objeto ao contexto
         // e finalmente salvamos as mudanças no contexto
         // na base de dados
-        public Book Create(Book book)
+        public BookVO Create(BookVO book)
         {
-            return _repository.Create(book);
+            var bookEntity = _converter.Parse(book);
+            bookEntity = _repository.Create(bookEntity);
+            return _converter.Parse(bookEntity);
         }
 
         // Método responsável por retornar uma pessoa
-        public Book FindById(long id)
+        public BookVO FindById(long id)
         {
-            return _repository.FindById(id);
+            return _converter.Parse(_repository.FindById(id));
         }
 
         // Método responsável por retornar todas as pessoas
-        public List<Book> FindAll()
+        public List<BookVO> FindAll()
         {
-            return _repository.FindAll();
+            return _converter.ParseList(_repository.FindAll());
         }
 
         // Método responsável por atualizar uma pessoa
-        public Book Update(Book book)
+        public BookVO Update(BookVO book)
         {
-            return _repository.Update(book);
+            var bookEntity = _converter.Parse(book);
+            bookEntity = _repository.Update(bookEntity);
+            return _converter.Parse(bookEntity);
         }
 
         // Método responsável por deletar
@@ -45,6 +53,11 @@ namespace RestWithASPNETUdemy.Service.Implementations
         public void Delete(long id)
         {
             _repository.Delete(id);
+        }
+
+        public bool Exists(long id)
+        {
+            return _repository.Exists(id);
         }
     }
 }

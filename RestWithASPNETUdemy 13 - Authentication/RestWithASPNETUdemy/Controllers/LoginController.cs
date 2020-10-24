@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RestWithASPNETUdemy.Model;
+using RestWithASPNETUdemy.Data.VO;
 using RestWithASPNETUdemy.Service;
 
 namespace RestWithASPNETUdemy.Controllers
@@ -18,7 +18,7 @@ namespace RestWithASPNETUdemy.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public object Post([FromBody]User user)
+        public object Post([FromBody]UserVO user)
         {
             if (user == null) return BadRequest();
             return _loginService.FindByLogin(user);

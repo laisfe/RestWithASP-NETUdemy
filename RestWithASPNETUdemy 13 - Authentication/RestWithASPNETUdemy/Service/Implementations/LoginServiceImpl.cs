@@ -1,4 +1,4 @@
-﻿using RestWithASPNETUdemy.Model;
+﻿using RestWithASPNETUdemy.Data.VO;
 using RestWithASPNETUdemy.Security.Configuration;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,7 +20,7 @@ namespace RestWithASPNETUdemy.Service.Implementations
             _tokenConfiguration = tokenConfiguration;
         }
 
-        public object FindByLogin(User user)
+        public object FindByLogin(UserVO user)
         {
             bool credentialIsValid = false;
             if (user != null && !string.IsNullOrWhiteSpace(user.Login))

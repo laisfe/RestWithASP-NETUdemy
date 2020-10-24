@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Tapioca.HATEOAS;
 
 namespace RestWithASPNETUdemy.Data.VO
 {
     [DataContract]
-    public class BookVO
+    public class BookVO : ISupportsHyperMedia
     {
-        [DataMember (Order = 1, Name = "codigo")]
+        [DataMember(Order = 1, Name = "codigo")]
         public long? Id { get; set; }
 
         [DataMember(Order = 2)]
@@ -20,5 +22,7 @@ namespace RestWithASPNETUdemy.Data.VO
 
         [DataMember(Order = 4)]
         public DateTime LaunchDate { get; set; }
+
+        public List<HyperMediaLink> Links { get; set; } = new List<HyperMediaLink>();
     }
 }

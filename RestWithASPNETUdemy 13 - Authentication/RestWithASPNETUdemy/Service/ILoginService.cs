@@ -1,9 +1,9 @@
-﻿using RestWithASPNETUdemy.Model;
+﻿using RestWithASPNETUdemy.Data.VO;
 
 namespace RestWithASPNETUdemy.Service
 {
     public interface ILoginService
     {
-        object FindByLogin(User user);
+        object FindByLogin(UserVO user);
     }
 }
